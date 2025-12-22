@@ -4,6 +4,7 @@ import { Mail, Bell, MessageSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 
+
 interface NotificationCategory {
   id: string;
   title: string;
