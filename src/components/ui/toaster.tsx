@@ -1,8 +1,16 @@
 import { useToast } from "@/hooks/use-toast";
-import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast";
 
+// Renders all active toasts
 export function Toaster() {
-  const { toasts } = useToast();
+  const { toasts } = useToast(); // get toast list
 
   return (
     <ToastProvider>
@@ -13,13 +21,15 @@ export function Toaster() {
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && <ToastDescription>{description}</ToastDescription>}
             </div>
+
             {action}
             <ToastClose />
           </Toast>
         );
       })}
+
+      {/* Toast container position */}
       <ToastViewport />
     </ToastProvider>
   );
 }
-
