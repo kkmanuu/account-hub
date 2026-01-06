@@ -1,19 +1,26 @@
 import * as React from "react";
 
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_BREAKPOINT = 768; // width threshold for mobile
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+
+    // Update state when screen size changes
     const onChange = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
+
     mql.addEventListener("change", onChange);
+
+    // Set initial value
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+
+    // Cleanup listener
     return () => mql.removeEventListener("change", onChange);
   }, []);
 
-  return !!isMobile;
+  return !!isMobile; // always return boolean
 }
