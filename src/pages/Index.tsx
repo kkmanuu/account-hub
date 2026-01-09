@@ -9,9 +9,15 @@ import { BillingSection } from "@/components/dashboard/BillingSection";
 import { FeatureFlagsSection } from "@/components/dashboard/FeatureFlagsSection";
 import { TeamSection } from "@/components/dashboard/TeamSection";
 
+/**
+ * Dashboard settings page.
+ * - Renders Sidebar, Header, and dynamic settings sections.
+ * - Supports Profile, Security, Notifications, Billing, Feature Flags, and Team sections.
+ */
 const Index = () => {
-  const [activeSection, setActiveSection] = useState("profile");
+  const [activeSection, setActiveSection] = useState("profile"); // Currently active section
 
+  // Render the selected settings section
   const renderSection = () => {
     switch (activeSection) {
       case "profile":
@@ -33,17 +39,25 @@ const Index = () => {
 
   return (
     <>
+      {/* SEO meta tags */}
       <Helmet>
         <title>Settings - SaaS Dashboard</title>
-        <meta name="description" content="Manage your account settings, security preferences, billing, and team members in one place." />
+        <meta
+          name="description"
+          content="Manage your account settings, security preferences, billing, and team members in one place."
+        />
       </Helmet>
-      
+
+      {/* Main dashboard layout */}
       <div className="flex min-h-screen w-full bg-background">
+        {/* Sidebar with active section */}
         <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-        
+
         <div className="flex-1 flex flex-col min-w-0">
+          {/* Top header */}
           <Header />
-          
+
+          {/* Main content area */}
           <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
             <div className="max-w-5xl mx-auto">
               {renderSection()}
