@@ -1,17 +1,32 @@
 {
+  // References to child TS config files
   "files": [],
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+
   "compilerOptions": {
+    // Base directory to resolve non-relative module names
     "baseUrl": ".",
+    
+    // Path alias for cleaner imports
     "paths": {
       "@/*": ["./src/*"]
     },
+
+    // Allow flexibility in typing (set to true for leniency)
     "noImplicitAny": false,
+    "strictNullChecks": false,
+
+    // Skip unused variable / parameter checks for now
     "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "allowJs": true,
     "noUnusedLocals": false,
-    "strictNullChecks": false
+
+    // Skip type checks for all declaration files (faster builds)
+    "skipLibCheck": true,
+
+    // Allow JS files to be compiled
+    "allowJs": true
   }
 }
-
