@@ -1,23 +1,30 @@
+/* Root container */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: 1280px; /* Limit maximum width */
+  margin: 0 auto; /* Center horizontally */
+  padding: 2rem; /* Inner spacing */
+  text-align: center; /* Center content */
 }
 
+/* Logo styling */
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  height: 6em; /* Logo height */
+  padding: 1.5em; /* Spacing around logo */
+  will-change: filter; 
+  transition: filter 300ms; 
 }
+
+/* Hover effect for all logos */
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
+/* Specific hover effect for React logo */
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Logo spin animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -27,16 +34,19 @@
   }
 }
 
+/* Apply spin animation if user allows motion */
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
+/* Card container styling */
 .card {
   padding: 2em;
 }
 
+/* Documentation link styling */
 .read-the-docs {
   color: #888;
 }
