@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
-
+// Feature flag model
 interface Feature {
   id: string;
   name: string;
@@ -25,6 +25,7 @@ interface Feature {
   enabled: boolean;
 }
 
+// Initial feature flag data
 const initialFeatures: Feature[] = [
   {
     id: "dark-mode",
@@ -84,29 +85,50 @@ const initialFeatures: Feature[] = [
   },
 ];
 
+// Environment badge configuration
 const environmentConfig = {
-  stable: { label: "Stable", className: "bg-success/10 text-success border-success/20" },
-  beta: { label: "Beta", className: "bg-primary/10 text-primary border-primary/20" },
-  experimental: { label: "Experimental", className: "bg-warning/10 text-warning border-warning/20" },
+  stable: {
+    label: "Stable",
+    className: "bg-success/10 text-success border-success/20",
+  },
+  beta: {
+    label: "Beta",
+    className: "bg-primary/10 text-primary border-primary/20",
+  },
+  experimental: {
+    label: "Experimental",
+    className: "bg-warning/10 text-warning border-warning/20",
+  },
 };
 
 export function FeatureFlagsSection() {
+  // Feature state
   const [features, setFeatures] = useState(initialFeatures);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterEnvironment, setFilterEnvironment] = useState<string | null>(null);
-  const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; feature: Feature | null }>({
+
+  // Confirmation dialog state for experimental features
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    feature: Feature | null;
+  }>({
     open: false,
     feature: null,
   });
 
+  // Filter features by search and environment
   const filteredFeatures = features.filter((feature) => {
     const matchesSearch =
       feature.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       feature.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = !filterEnvironment || feature.environment === filterEnvironment;
+
+    const matchesFilter =
+      !filterEnvironment || feature.environment === filterEnvironment;
+
     return matchesSearch && matchesFilter;
   });
 
+  // Handle toggle with confirmation for experimental features
   const handleToggle = (feature: Feature) => {
     if (feature.environment === "experimental" && !feature.enabled) {
       setConfirmDialog({ open: true, feature });
@@ -115,12 +137,16 @@ export function FeatureFlagsSection() {
     }
   };
 
+  // Toggle feature enabled state
   const toggleFeature = (featureId: string) => {
     setFeatures((prev) =>
-      prev.map((f) => (f.id === featureId ? { ...f, enabled: !f.enabled } : f))
+      prev.map((f) =>
+        f.id === featureId ? { ...f, enabled: !f.enabled } : f
+      )
     );
   };
 
+  // Confirm enabling experimental feature
   const confirmExperimentalFeature = () => {
     if (confirmDialog.feature) {
       toggleFeature(confirmDialog.feature.id);
@@ -130,11 +156,13 @@ export function FeatureFlagsSection() {
 
   return (
     <motion.div
+      // Entry animation
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
+      {/* Header */}
       <div>
         <h2 className="text-2xl font-semibold">Feature Flags</h2>
         <p className="text-muted-foreground mt-1">
@@ -142,7 +170,7 @@ export function FeatureFlagsSection() {
         </p>
       </div>
 
-      {/* Search and Filter */}
+      {/* Search and environment filter */}
       <div className="bg-card rounded-xl border border-border p-4 shadow-card">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
@@ -154,12 +182,15 @@ export function FeatureFlagsSection() {
               className="pl-10"
             />
           </div>
+
           <div className="flex gap-2">
             {Object.entries(environmentConfig).map(([key, config]) => (
               <button
                 key={key}
                 onClick={() =>
-                  setFilterEnvironment(filterEnvironment === key ? null : key)
+                  setFilterEnvironment(
+                    filterEnvironment === key ? null : key
+                  )
                 }
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-sm font-medium transition-all border",
@@ -175,14 +206,16 @@ export function FeatureFlagsSection() {
         </div>
       </div>
 
-      {/* Feature List */}
+      {/* Feature list */}
       <div className="bg-card rounded-xl border border-border shadow-card overflow-hidden">
         <div className="divide-y divide-border">
           {filteredFeatures.map((feature, index) => {
             const envConfig = environmentConfig[feature.environment];
+
             return (
               <motion.div
                 key={feature.id}
+                // Staggered list animation
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
@@ -193,10 +226,14 @@ export function FeatureFlagsSection() {
                     <div className="p-2 rounded-lg bg-muted mt-0.5">
                       <Flag className="h-4 w-4 text-muted-foreground" />
                     </div>
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h4 className="font-medium">{feature.name}</h4>
-                        <Badge variant="outline" className={envConfig.className}>
+                        <Badge
+                          variant="outline"
+                          className={envConfig.className}
+                        >
                           {envConfig.label}
                         </Badge>
                       </div>
@@ -205,6 +242,7 @@ export function FeatureFlagsSection() {
                       </p>
                     </div>
                   </div>
+
                   <Switch
                     checked={feature.enabled}
                     onCheckedChange={() => handleToggle(feature)}
@@ -215,6 +253,7 @@ export function FeatureFlagsSection() {
           })}
         </div>
 
+        {/* Empty state */}
         {filteredFeatures.length === 0 && (
           <div className="p-8 text-center">
             <Flag className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
@@ -223,11 +262,14 @@ export function FeatureFlagsSection() {
         )}
       </div>
 
-      {/* Confirmation Dialog */}
+      {/* Experimental feature confirmation */}
       <AlertDialog
         open={confirmDialog.open}
         onOpenChange={(open) =>
-          setConfirmDialog({ open, feature: open ? confirmDialog.feature : null })
+          setConfirmDialog({
+            open,
+            feature: open ? confirmDialog.feature : null,
+          })
         }
       >
         <AlertDialogContent>
@@ -236,16 +278,19 @@ export function FeatureFlagsSection() {
               <AlertTriangle className="h-5 w-5 text-warning" />
               Enable Experimental Feature?
             </AlertDialogTitle>
+
             <AlertDialogDescription>
               {confirmDialog.feature && (
                 <>
-                  You're about to enable <strong>{confirmDialog.feature.name}</strong>.
-                  Experimental features may be unstable and could change or be removed
-                  without notice. Are you sure you want to proceed?
+                  You're about to enable{" "}
+                  <strong>{confirmDialog.feature.name}</strong>. Experimental
+                  features may be unstable and could change or be removed without
+                  notice.
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
+
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
