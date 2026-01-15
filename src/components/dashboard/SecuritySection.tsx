@@ -21,33 +21,14 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
+// Mock session data
 const sessions = [
-  {
-    id: 1,
-    device: "MacBook Pro",
-    icon: Monitor,
-    location: "San Francisco, CA",
-    lastActive: "Active now",
-    current: true,
-  },
-  {
-    id: 2,
-    device: "iPhone 14 Pro",
-    icon: Smartphone,
-    location: "San Francisco, CA",
-    lastActive: "2 hours ago",
-    current: false,
-  },
-  {
-    id: 3,
-    device: "Windows PC",
-    icon: Monitor,
-    location: "New York, NY",
-    lastActive: "3 days ago",
-    current: false,
-  },
+  { id: 1, device: "MacBook Pro", icon: Monitor, location: "San Francisco, CA", lastActive: "Active now", current: true },
+  { id: 2, device: "iPhone 14 Pro", icon: Smartphone, location: "San Francisco, CA", lastActive: "2 hours ago", current: false },
+  { id: 3, device: "Windows PC", icon: Monitor, location: "New York, NY", lastActive: "3 days ago", current: false },
 ];
 
+// Compute password strength for feedback
 function getPasswordStrength(password: string) {
   if (!password) return { score: 0, label: "", color: "" };
   let score = 0;
@@ -65,6 +46,7 @@ function getPasswordStrength(password: string) {
 }
 
 export function SecuritySection() {
+  // State for 2FA, password visibility, and password inputs
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -76,6 +58,7 @@ export function SecuritySection() {
   const passwordStrength = getPasswordStrength(newPassword);
   const passwordsMatch = newPassword && confirmPassword && newPassword === confirmPassword;
 
+  // Handle password update
   const handlePasswordChange = () => {
     toast({
       title: "Password updated",
@@ -86,6 +69,7 @@ export function SecuritySection() {
     setConfirmPassword("");
   };
 
+  // Handle logout for other sessions
   const handleSessionLogout = (sessionId: number) => {
     toast({
       title: "Session terminated",
@@ -100,6 +84,7 @@ export function SecuritySection() {
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
+      {/* Section header */}
       <div>
         <h2 className="text-2xl font-semibold">Security</h2>
         <p className="text-muted-foreground mt-1">
@@ -122,6 +107,7 @@ export function SecuritySection() {
         </div>
 
         <div className="space-y-4 max-w-md">
+          {/* Current password input */}
           <div className="space-y-2">
             <Label htmlFor="currentPassword">Current Password</Label>
             <div className="relative">
@@ -132,6 +118,7 @@ export function SecuritySection() {
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter current password"
               />
+              {/* Toggle password visibility */}
               <button
                 type="button"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
@@ -142,6 +129,7 @@ export function SecuritySection() {
             </div>
           </div>
 
+          {/* New password input with strength */}
           <div className="space-y-2">
             <Label htmlFor="newPassword">New Password</Label>
             <div className="relative">
@@ -160,6 +148,7 @@ export function SecuritySection() {
                 {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
+            {/* Password strength indicator */}
             {newPassword && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -178,6 +167,7 @@ export function SecuritySection() {
             )}
           </div>
 
+          {/* Confirm new password */}
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm New Password</Label>
             <Input
@@ -207,6 +197,7 @@ export function SecuritySection() {
             )}
           </div>
 
+          {/* Update password button */}
           <Button
             onClick={handlePasswordChange}
             disabled={!currentPassword || !newPassword || !passwordsMatch || passwordStrength.score < 60}
@@ -236,6 +227,7 @@ export function SecuritySection() {
             onCheckedChange={setTwoFactorEnabled}
           />
         </div>
+        {/* Warning if 2FA is off */}
         {!twoFactorEnabled && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -267,6 +259,7 @@ export function SecuritySection() {
                 animate={{ opacity: 1, x: 0 }}
                 className="flex items-center justify-between p-4 rounded-lg border border-border bg-background"
               >
+                {/* Device info */}
                 <div className="flex items-center gap-4">
                   <div className="p-2 rounded-lg bg-muted">
                     <Icon className="h-5 w-5 text-muted-foreground" />
@@ -288,6 +281,8 @@ export function SecuritySection() {
                     </div>
                   </div>
                 </div>
+
+                {/* Logout button for other sessions */}
                 {!session.current && (
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
