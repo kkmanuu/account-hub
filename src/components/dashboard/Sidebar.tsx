@@ -19,6 +19,7 @@ interface SidebarProps {
   onSectionChange: (section: string) => void;
 }
 
+// Navigation items for sidebar
 const navItems = [
   { id: "profile", label: "Profile", icon: User },
   { id: "security", label: "Security", icon: Shield },
@@ -29,9 +30,10 @@ const navItems = [
 ];
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
+  // Sidebar collapse state & mobile menu state
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const sidebarWidth = isCollapsed ? 80 : 256;
+  const sidebarWidth = isCollapsed ? 80 : 256; // Width based on collapse
 
   return (
     <>
@@ -58,7 +60,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
+      {/* Sidebar container */}
       <motion.aside
         initial={false}
         animate={{ width: sidebarWidth }}
@@ -71,8 +73,9 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
         )}
         style={{ width: sidebarWidth }}
       >
-        {/* Logo area */}
+        {/* Logo and collapse button */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
+          {/* Logo and title */}
           <AnimatePresence mode="wait">
             {!isCollapsed && (
               <motion.div
@@ -89,6 +92,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
             )}
           </AnimatePresence>
 
+          {/* Collapse/expand button */}
           <Button
             variant="ghost"
             size="icon"
@@ -101,7 +105,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           </Button>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation items */}
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto scrollbar-thin">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -111,8 +115,8 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
               <motion.button
                 key={item.id}
                 onClick={() => {
-                  onSectionChange(item.id);
-                  setIsMobileOpen(false);
+                  onSectionChange(item.id); // Change section on click
+                  setIsMobileOpen(false); // Close mobile menu if open
                 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -124,7 +128,10 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
                     : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
                 )}
               >
+                {/* Icon */}
                 <Icon className={cn("h-5 w-5 flex-shrink-0", isActive && "text-primary")} />
+
+                {/* Label (hidden when collapsed) */}
                 <AnimatePresence mode="wait">
                   {!isCollapsed && (
                     <motion.span
