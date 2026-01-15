@@ -15,6 +15,7 @@ import {
 
 import { useToast } from "@/hooks/use-toast";
 
+// Initial profile data
 const initialProfile = {
   fullName: "John Doe",
   email: "john@company.com",
@@ -24,17 +25,18 @@ const initialProfile = {
 };
 
 export function ProfileSection() {
-  const [profile, setProfile] = useState(initialProfile);
-  const [originalProfile] = useState(initialProfile);
+  const [profile, setProfile] = useState(initialProfile); // current state
+  const [originalProfile] = useState(initialProfile); // for comparing changes
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
+  // Check if there are unsaved changes
   const hasChanges = JSON.stringify(profile) !== JSON.stringify(originalProfile);
 
+  // Simulate saving profile changes
   const handleSave = async () => {
     setIsSaving(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // simulate API call
     setIsSaving(false);
     toast({
       title: "Profile updated",
@@ -42,6 +44,7 @@ export function ProfileSection() {
     });
   };
 
+  // Reset to original values
   const handleCancel = () => {
     setProfile(originalProfile);
   };
@@ -53,6 +56,7 @@ export function ProfileSection() {
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
+      {/* Header */}
       <div>
         <h2 className="text-2xl font-semibold">Profile</h2>
         <p className="text-muted-foreground mt-1">
@@ -60,7 +64,7 @@ export function ProfileSection() {
         </p>
       </div>
 
-      {/* Avatar section */}
+      {/* Avatar / Profile photo */}
       <div className="bg-card rounded-xl border border-border p-6 shadow-card">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
           Profile Photo
@@ -92,48 +96,56 @@ export function ProfileSection() {
         </div>
       </div>
 
-      {/* Personal info section */}
+      {/* Personal Information */}
       <div className="bg-card rounded-xl border border-border p-6 shadow-card">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-6">
           Personal Information
         </h3>
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Full Name */}
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>
             <Input
               id="fullName"
               value={profile.fullName}
-              onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, fullName: e.target.value })
+              }
               placeholder="Enter your full name"
             />
           </div>
+
+          {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
               type="email"
               value={profile.email}
-              onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, email: e.target.value })
+              }
               placeholder="Enter your email"
             />
           </div>
+
+          {/* Role (disabled) */}
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Input
-              id="role"
-              value={profile.role}
-              disabled
-              className="bg-muted"
-            />
+            <Input id="role" value={profile.role} disabled className="bg-muted" />
             <p className="text-xs text-muted-foreground">
               Contact an admin to change your role
             </p>
           </div>
+
+          {/* Timezone */}
           <div className="space-y-2">
             <Label htmlFor="timezone">Timezone</Label>
             <Select
               value={profile.timezone}
-              onValueChange={(value) => setProfile({ ...profile, timezone: value })}
+              onValueChange={(value) =>
+                setProfile({ ...profile, timezone: value })
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select timezone" />
@@ -149,11 +161,15 @@ export function ProfileSection() {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Language */}
           <div className="space-y-2">
             <Label htmlFor="language">Language</Label>
             <Select
               value={profile.language}
-              onValueChange={(value) => setProfile({ ...profile, language: value })}
+              onValueChange={(value) =>
+                setProfile({ ...profile, language: value })
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select language" />
@@ -169,17 +185,25 @@ export function ProfileSection() {
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Actions: Save / Cancel */}
         <motion.div
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: hasChanges ? 1 : 0, height: hasChanges ? "auto" : 0 }}
+          animate={{
+            opacity: hasChanges ? 1 : 0,
+            height: hasChanges ? "auto" : 0,
+          }}
           className="flex items-center gap-3 mt-6 pt-6 border-t border-border"
         >
           <Button onClick={handleSave} disabled={isSaving || !hasChanges}>
             {isSaving ? (
+              // Loading spinner
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1,
+                  ease: "linear",
+                }}
                 className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full"
               />
             ) : (
